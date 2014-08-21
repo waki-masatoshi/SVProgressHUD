@@ -781,6 +781,23 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
         _overlayView.backgroundColor = [UIColor clearColor];
         [_overlayView addTarget:self action:@selector(overlayViewDidReceiveTouchEvent:forEvent:) forControlEvents:UIControlEventTouchDown];
     }
+    
+    // When iOS8, change Overlay's frame size when every referenced.
+    BOOL iOS8 = [[NSProcessInfo processInfo] respondsToSelector:@selector(operatingSystemVersion)];
+    
+    if (iOS8) {
+        CGRect bounds = self.window.bounds;
+        
+        UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
+        
+        // When landscape, swap height and width.
+        if (orientation == UIDeviceOrientationLandscapeLeft || orientation == UIDeviceOrientationLandscapeRight) {
+            bounds.size = CGSizeMake(bounds.size.height, bounds.size.width);
+        }
+        
+        overlayView.frame = bounds;
+    }
+    
     return _overlayView;
 }
 
